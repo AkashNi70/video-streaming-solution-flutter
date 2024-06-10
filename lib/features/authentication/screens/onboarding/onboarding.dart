@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ottui/features/authentication/controllers/onboarding/onboarding_controller.dart';
+import 'package:ottui/features/authentication/controllers/onboarding_controller.dart';
 import 'package:ottui/utils/constants/text_strings.dart';
 import 'package:ottui/utils/constants/images_strings.dart';
 import 'package:ottui/utils/constants/sizes.dart';

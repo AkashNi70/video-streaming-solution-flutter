@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
-import '../../screens/login/login.dart';
-import '../../screens/signup/signup.dart';
+import '../../../app_preferences.dart';
+import '../screens/login/login.dart';
+import '../screens/signup/signup.dart';
 
 class OnBoardingController extends GetxController {
   static OnBoardingController get instance => Get.find();
@@ -22,15 +22,13 @@ class OnBoardingController extends GetxController {
   }
 
   //update current index & jump to next page
-  void loginPage(){
-    final storage = GetStorage();
-    storage.write('isFirstTime', false);
+  void loginPage() async{
+    await AppPreferences().setFirstTime(false);
     Get.offAll(const LoginScreen());
   }
 
-  void signupPage(){
-    final storage = GetStorage();
-    storage.write('isFirstTime', false);
+  void signupPage() async{
+    await AppPreferences().setFirstTime(false);
     Get.offAll(const SignUpScreen());
   }
 

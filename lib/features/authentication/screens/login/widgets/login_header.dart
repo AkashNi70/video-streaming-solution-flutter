@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:ottui/features/streamx/screens/home/home.dart';
+import 'package:ottui/navigation_menu.dart';
 import 'package:ottui/utils/helpers/helper_functions.dart';
 
 import '../../../../../utils/constants/images_strings.dart';
@@ -6,7 +9,7 @@ import '../../../../../utils/constants/sizes.dart';
 import '../../../../../utils/constants/text_strings.dart';
 
 class LoginHeader extends StatelessWidget {
-  const LoginHeader({super.key});
+  const LoginHeader({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +18,21 @@ class LoginHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Image(
-          height: 150,
-          image: AssetImage(
-              dark ? AppImages.lightLogo : AppImages.darkLogo),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Image(
+              height: 150,
+              image: AssetImage(
+                  dark ? AppImages.lightLogo : AppImages.darkLogo),
+            ),
+            TextButton(
+              onPressed: () {
+                Get.offAll(() => const NavigationMenu());
+              },
+              child: const Text('Skip'),
+            ),
+          ],
         ),
         Text(
           AppTexts.loginTitle,

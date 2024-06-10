@@ -1,8 +1,9 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ottui/app_preferences.dart';
 import 'package:ottui/common/widgets/containers/primary_header_container.dart';
+import 'package:ottui/features/authentication/screens/login/login.dart';
+import 'package:ottui/features/streamx/screens/payment_gateway/payment_gateway.dart';
 import 'package:ottui/features/streamx/screens/subscriptions/widgets/dotted_line.dart';
 import 'package:ottui/utils/constants/images_strings.dart';
 
@@ -12,12 +13,13 @@ import '../../../../utils/constants/sizes.dart';
 import '../../controllers/subscription_controller.dart';
 
 class SubscriptionPlanScreen extends StatelessWidget {
-  final SubscriptionController _controller = Get.put(SubscriptionController());
-
   SubscriptionPlanScreen({super.key});
+
+  final controller = Get.put(SubscriptionController());
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -95,53 +97,48 @@ class SubscriptionPlanScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSizes.spaceBtwItems),
                   Obx(() {
-                    if (_controller.isLoading.value) {
+                    if (controller.isLoading.value) {
                       return const Center(child: CircularProgressIndicator());
-                    } else if (_controller.plans.isEmpty) {
+                    } else if (controller.plans.isEmpty) {
                       return const Center(child: Text('No plans available'));
                     } else {
                       return Column(
-                        children: _controller.plans.map((plan) {
-                          final isSelected =
-                              plan.value == _controller.selectedPlan.value;
+                        children: controller.plans.map((plan) {
+                          final int parsedPlanId = int.tryParse(plan.planId) ?? 0;
+                          final isSelected = plan.planId == controller.selectedPlan.value.toString();
                           return Card(
-                            color:
-                                isSelected ? AppColors.primary : AppColors.dark,
+                            color: isSelected ? AppColors.primary : AppColors.dark,
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 2.0, vertical: 4),
+                              padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 4),
                               child: RadioListTile<int>(
                                 title: Text(
-                                  plan.title,
+                                  plan.planName,
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
-                                    color: isSelected
-                                        ? AppColors.black
-                                        : AppColors.primary,
+                                    color: isSelected ? AppColors.black : AppColors.primary,
                                   ),
                                 ),
                                 subtitle: Text(
-                                  plan.subtitle,
+                                  '${plan.planDuration} - ${plan.planPrice} ${plan.currencyCode}',
                                   style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.w500,
-                                    color: isSelected
-                                        ? AppColors.black
-                                        : AppColors.primary,
+                                    color: isSelected ? AppColors.black : AppColors.primary,
                                   ),
                                 ),
-                                value: plan.value,
-                                groupValue: _controller.selectedPlan.value,
+                                value: parsedPlanId,
+                                groupValue: controller.selectedPlan.value,
                                 activeColor: AppColors.dark,
-                                onChanged: _controller.selectPlan,
+                                onChanged: controller.selectPlan,
                               ),
                             ),
                           );
                         }).toList(),
                       );
                     }
-                  }),
+                  })
+
                 ],
               ),
             ),
@@ -149,9 +146,13 @@ class SubscriptionPlanScreen extends StatelessWidget {
               padding: const EdgeInsets.all(AppSizes.defaultSpace),
               child: Obx(() {
                 return ElevatedButton(
-                  onPressed: _controller.selectedPlan.value != null
+                  onPressed: controller.selectedPlan.value != null
                       ? () {
-                          // Handle the continue action
+                          if(AppPreferences().getIsLogin()){
+                            Get.to(() => const PaymentGateway());
+                          }else{
+                            Get.to(() => const LoginScreen());
+                          }
                         }
                       : () {
                           // Show toast message if no plan selected

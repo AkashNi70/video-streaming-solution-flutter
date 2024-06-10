@@ -16,4 +16,10 @@ class AppImages{
 
   //onboarding images
   static const String onBoardingImage1 = "assets/images/onboarding_images/watching-movie.gif";
+
+  //lottie animation
+  static const String docerAnimation = "assets/animation/loader-animation.json";
+  static const String successfullyRegisterAnimation = "assets/animation/check_register.json";
+  static const String successfullyPaymentIcon = "assets/animation/payment_success.json";
+
 }

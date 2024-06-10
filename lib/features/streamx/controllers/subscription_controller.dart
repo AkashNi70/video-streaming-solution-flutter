@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
-
+import 'package:ottui/data/repositories/subscription_repository.dart';
+import 'package:ottui/utils/popups/loaders.dart';
 import '../models/subscription_plan_models.dart';
 
 class SubscriptionController extends GetxController {
@@ -14,15 +15,18 @@ class SubscriptionController extends GetxController {
   }
 
   Future<void> fetchPlans() async {
-    // Simulate a network call or data fetching
-    await Future.delayed(const Duration(seconds: 2));
-    plans.value = [
-      SubscriptionPlan(title: '₹ 199.00 / month', subtitle: 'Monthly Subscription', value: 1),
-      SubscriptionPlan(title: '₹ 499.00 / quarter', subtitle: 'Quarterly Subscription', value: 2),
-      SubscriptionPlan(title: '₹ 899.00 / half-year', subtitle: 'Half-Yearly Subscription', value: 3),
-      SubscriptionPlan(title: '₹ 1499.00 / year', subtitle: 'Yearly Subscription', value: 4),
-    ];
-    isLoading.value = false;
+    isLoading.value = true;
+    try {
+      final planRepo = Get.put(SubscriptionRepository());
+      final fetchedPlans = await planRepo.fetchSubscriptionPlans();
+      plans.assignAll(fetchedPlans);
+
+    } catch (e) {
+      // Handle error with a snack bar
+      AppLoaders.errorSnackBar(title: 'Oh Snap!', message: e.toString());
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   void selectPlan(int? value) {

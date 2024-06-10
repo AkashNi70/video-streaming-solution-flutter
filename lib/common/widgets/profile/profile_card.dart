@@ -4,29 +4,42 @@ import 'package:ottui/utils/constants/colors.dart';
 import 'package:ottui/utils/constants/images_strings.dart';
 import 'package:ottui/utils/constants/sizes.dart';
 
+import '../../../app_preferences.dart';
+
 class ProfileCard extends StatelessWidget {
   const ProfileCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(0),
+    final appPreferences = AppPreferences(); // Initialize AppPreferences
+    String userName = appPreferences.getUserName();
+    String userEmail = appPreferences.getUserEmail();
+
+    // Check if name and email are empty, if so, use dummy data
+    if (userName.isEmpty) {
+      userName = 'John Doe';
+    }
+    if (userEmail.isEmpty) {
+      userEmail = 'johndoe@example.com';
+    }
+    return Padding(
+      padding: const EdgeInsets.all(0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          AppCircularImage(image: AppImages.logo, width: 100, height: 100, backgroundColor: AppColors.dark,padding: 10,),
-          SizedBox(height: AppSizes.sm),
+          const AppCircularImage(image: AppImages.logo, width: 100, height: 100, backgroundColor: AppColors.dark,padding: 10,),
+          const SizedBox(height: AppSizes.sm),
           Text(
-            'Akash Nishad',
-            style: TextStyle(
+            userName,
+            style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: AppSizes.xs),
+          const SizedBox(height: AppSizes.xs),
           Text(
-            'akash20@gmail.com',
-            style: TextStyle(
+            userEmail,
+            style: const TextStyle(
               fontSize: 16,
               color: Colors.grey,
             ),

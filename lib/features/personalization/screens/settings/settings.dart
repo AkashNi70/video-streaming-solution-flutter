@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ottui/app_preferences.dart';
 import 'package:ottui/common/widgets/appbar/appbar.dart';
 import 'package:ottui/common/widgets/dynamic_page/dynamic_page.dart';
 import 'package:ottui/common/widgets/list_tile/settings_menu_tile.dart';
@@ -24,7 +25,6 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isLogin = false; // Set isLogin to false for demonstration
     final dark = AppHelperFunctions.isDarkMode(context);
     final themeController = Get.find<ThemeController>();
 
@@ -100,7 +100,7 @@ class SettingsScreen extends StatelessWidget {
                 AppSettingsMenuTile(
                   icon: Icons.privacy_tip,
                   title: AppTexts.termsOfUse,
-                  onTap: () => Get.to(() => const DynamicPage(title: AppTexts.termsOfUse)),
+                  onTap: () => Get.to(() => const DynamicPage(title: AppTexts.termsOfUse, dataUrl: 'https://videoapi.softintraproduct.in/page/terms-of-use',)),
                   trailing: IconButton(
                     onPressed: () {},
                     icon: Icon(
@@ -112,7 +112,7 @@ class SettingsScreen extends StatelessWidget {
                 AppSettingsMenuTile(
                   icon: Icons.policy,
                   title: AppTexts.privacyPolicy,
-                  onTap: () => Get.to(() => const DynamicPage(title: AppTexts.privacyPolicy)),
+                  onTap: () => Get.to(() => const DynamicPage(title: AppTexts.privacyPolicy, dataUrl: 'https://videoapi.softintraproduct.in/page/privacy-policy',)),
                   trailing: IconButton(
                     onPressed: () {},
                     icon: Icon(
@@ -124,7 +124,7 @@ class SettingsScreen extends StatelessWidget {
                 AppSettingsMenuTile(
                   icon: Icons.policy,
                   title: AppTexts.refundPolicy,
-                  onTap: () => Get.to(() => const DynamicPage(title: AppTexts.refundPolicy)),
+                  onTap: () => Get.to(() => const DynamicPage(title: AppTexts.refundPolicy, dataUrl: 'https://videoapi.softintraproduct.in/page/privacy-policy',)),
                   trailing: IconButton(
                     onPressed: () {},
                     icon: Icon(
@@ -175,13 +175,13 @@ class SettingsScreen extends StatelessWidget {
                   width: double.infinity,
                   child: OutlinedButton(
                     onPressed: () {
-                      if (isLogin) {
-                        Get.to(() => const SignUpScreen()); // Navigate to SignUpScreen if logged in
-                      } else {
-                        Get.to(() => const LoginScreen()); // Navigate to LoginScreen if not logged in
+                      if(AppPreferences().getIsLogin()){
+                        print('Logout');
+                      }else{
+                        Get.offAll(() => const LoginScreen());
                       }
                     },
-                    child: Text(isLogin ? 'Logout' : 'Login'),
+                    child: Text(AppPreferences().getIsLogin() ? 'Logout' : 'Login'),
                   ),
                 ),
                 const SizedBox(height: AppSizes.spaceBtwSections * 2.5),

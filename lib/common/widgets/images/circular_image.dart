@@ -31,7 +31,7 @@ class AppCircularImage extends StatelessWidget {
       height: height,
       padding: EdgeInsets.all(padding),
       decoration: BoxDecoration(
-// If image background color is null then switch it to light and dark mode color design.
+      // If image background color is null then switch it to light and dark mode color design.
         color: backgroundColor ??
             (AppHelperFunctions.isDarkMode(context)
                 ? AppColors.black

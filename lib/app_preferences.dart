@@ -13,6 +13,7 @@ class AppPreferences {
   static const String _prefName = "VideoStreamingApp";
   static const String _isLoggedInKey = "IsLoggedIn";
   static const String _isLoggedRememberKey = "IsLoggedRemember";
+  static const String _isDarkMode = "IsLoggedRemember";
   static const String _userIdKey = "user_id";
   static const String _userNameKey = "user_name";
   static const String _emailKey = "email";
@@ -58,6 +59,16 @@ class AppPreferences {
   /// Gets user consent
   bool getConsent() {
     return _preferences.getBool(_consentKey) ?? false;
+  }
+
+  ///save dark mode data
+  Future<void> saveIsDarkMode(bool flag) async{
+    await _preferences.setBool(_isDarkMode, flag);
+  }
+
+  /// Retrieves the dark mode data
+  bool getIsDarkMode(){
+    return _preferences.getBool(_isDarkMode) ?? false;
   }
 
   /// Saves the remember login state

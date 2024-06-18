@@ -57,18 +57,23 @@ class SettingsScreen extends StatelessWidget {
                 const AppSectionHeading(
                     title: 'Account Settings', showActionButton: false),
                 const SizedBox(height: AppSizes.spaceBtwItems),
-                AppSettingsMenuTile(
-                  icon: Icons.edit,
-                  title: 'Profile Settings',
-                  onTap: () => Get.to(() => const ProfileScreen()),
-                  trailing: IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.keyboard_arrow_right,
-                      color: dark ? AppColors.white : AppColors.black,
+                  AppSettingsMenuTile(
+                    icon: Icons.edit,
+                    title: 'Profile Settings',
+                    onTap: () => {
+                      if (AppPreferences().getIsLogin())
+                        Get.to(() => const ProfileScreen())
+                      else
+                        Get.to(() => const LoginScreen())
+                    },
+                    trailing: IconButton(
+                      onPressed: () {},
+                      icon: Icon(
+                        Icons.keyboard_arrow_right,
+                        color: dark ? AppColors.white : AppColors.black,
+                      ),
                     ),
                   ),
-                ),
                 AppSettingsMenuTile(
                   icon: Icons.subscriptions,
                   title: 'Subscribe Now',
@@ -84,7 +89,12 @@ class SettingsScreen extends StatelessWidget {
                 AppSettingsMenuTile(
                   icon: Icons.history,
                   title: 'Watch History',
-                  onTap: () => Get.to(() => const WatchHistory()),
+                  onTap: () => {
+                    if (AppPreferences().getIsLogin())
+                      Get.to(() => const WatchHistory())
+                    else
+                      Get.to(() => const LoginScreen())
+                  },
                   trailing: IconButton(
                     onPressed: () {},
                     icon: Icon(
@@ -100,7 +110,11 @@ class SettingsScreen extends StatelessWidget {
                 AppSettingsMenuTile(
                   icon: Icons.privacy_tip,
                   title: AppTexts.termsOfUse,
-                  onTap: () => Get.to(() => const DynamicPage(title: AppTexts.termsOfUse, dataUrl: 'https://videoapi.softintraproduct.in/page/terms-of-use',)),
+                  onTap: () => Get.to(() => const DynamicPage(
+                        title: AppTexts.termsOfUse,
+                        dataUrl:
+                            'https://videoapi.softintraproduct.in/page/terms-of-use',
+                      )),
                   trailing: IconButton(
                     onPressed: () {},
                     icon: Icon(
@@ -112,7 +126,11 @@ class SettingsScreen extends StatelessWidget {
                 AppSettingsMenuTile(
                   icon: Icons.policy,
                   title: AppTexts.privacyPolicy,
-                  onTap: () => Get.to(() => const DynamicPage(title: AppTexts.privacyPolicy, dataUrl: 'https://videoapi.softintraproduct.in/page/privacy-policy',)),
+                  onTap: () => Get.to(() => const DynamicPage(
+                        title: AppTexts.privacyPolicy,
+                        dataUrl:
+                            'https://videoapi.softintraproduct.in/page/privacy-policy',
+                      )),
                   trailing: IconButton(
                     onPressed: () {},
                     icon: Icon(
@@ -124,7 +142,11 @@ class SettingsScreen extends StatelessWidget {
                 AppSettingsMenuTile(
                   icon: Icons.policy,
                   title: AppTexts.refundPolicy,
-                  onTap: () => Get.to(() => const DynamicPage(title: AppTexts.refundPolicy, dataUrl: 'https://videoapi.softintraproduct.in/page/privacy-policy',)),
+                  onTap: () => Get.to(() => const DynamicPage(
+                        title: AppTexts.refundPolicy,
+                        dataUrl:
+                            'https://videoapi.softintraproduct.in/page/privacy-policy',
+                      )),
                   trailing: IconButton(
                     onPressed: () {},
                     icon: Icon(
@@ -150,38 +172,45 @@ class SettingsScreen extends StatelessWidget {
                   ),
                 ),
                 Obx(
-                      () => AppSettingsMenuTile(
-                    icon: themeController.isDarkMode.value
-                        ? Icons.dark_mode
-                        : Icons.light_mode,
-                    title: themeController.isDarkMode.value
-                        ? 'Dark Mode'
-                        : 'Light Mode',
-                    onTap: () => themeController.toggleTheme(),
-                    trailing: Switch(
-                      value: themeController.isDarkMode.value,
-                      onChanged: (value) {
+                    () => AppSettingsMenuTile(
+                      icon: themeController.isDarkMode.value
+                          ? Icons.light_mode
+                          : Icons.dark_mode,
+                      title: themeController.isDarkMode.value
+                          ? 'Light Mode'
+                          : 'Dark Mode',
+                      onTap: () {
                         themeController.toggleTheme();
+                        AppPreferences().saveIsDarkMode(themeController.isDarkMode.value); // Save preference
                       },
-                      activeColor: AppColors.black,
-                      activeTrackColor: AppColors.primary,
-                      inactiveTrackColor: AppColors.light,
-                      inactiveThumbColor: AppColors.black,
-                    ),
+                      trailing: Switch(
+                        value: themeController.isDarkMode.value,
+                        onChanged: (value) {
+                          themeController.toggleTheme();
+                          AppPreferences().saveIsDarkMode(themeController.isDarkMode.value); // Save preference
+                        },
+                        activeColor: AppColors.black,
+                        activeTrackColor: AppColors.primary,
+                        inactiveTrackColor: AppColors.light,
+                        inactiveThumbColor: AppColors.black,
+                      ),
                   ),
                 ),
+
                 const SizedBox(height: AppSizes.spaceBtwSections),
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton(
                     onPressed: () {
-                      if(AppPreferences().getIsLogin()){
-                        print('Logout');
-                      }else{
+                      if (AppPreferences().getIsLogin()) {
+                        AppPreferences().saveIsLogin(false);
+                        Get.offAll(() => const LoginScreen());
+                      } else {
                         Get.offAll(() => const LoginScreen());
                       }
                     },
-                    child: Text(AppPreferences().getIsLogin() ? 'Logout' : 'Login'),
+                    child: Text(
+                        AppPreferences().getIsLogin() ? 'Logout' : 'Login'),
                   ),
                 ),
                 const SizedBox(height: AppSizes.spaceBtwSections * 2.5),
